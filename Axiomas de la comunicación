@@ -1,0 +1,47 @@
+from textwrap import dedent
+html=dedent('''<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Patos y Axiomas</title>
+<style>
+body{font-family:Arial;background:#9dd;text-align:center}#game{max-width:900px;margin:auto}
+.ducks{display:flex;justify-content:space-between;align-items:center;font-size:80px}
+.hp{font-size:20px}.gun{display:inline-block;transition:.4s}.shoot{transform:translateX(20px) rotate(-10deg)}
+button{margin:6px;padding:10px}#msg{font-weight:bold;height:28px}
+</style></head><body><div id="game"><h1>Patos y Axiomas</h1>
+<div>Turno: <span id=t>Ataque</span></div>
+<div class=ducks><div>🦆<div class=hp id=ph>❤️❤️❤️</div></div><div id=gun class=gun>🔫</div><div>🦆<div class=hp id=eh>❤️❤️❤️❤️❤️</div></div></div>
+<div id=q></div><div id=opts></div><div id=msg></div></div>
+<script>
+const qs=[
+{q:"¿Qué axioma dice que siempre comunicamos?",a:["No es posible no comunicarse","Relación y contenido","Puntuación"],c:0},
+{q:"¿Qué axioma habla del lenguaje verbal y no verbal?",a:["Digital y analógica","Simétrica","Puntuación"],c:0},
+{q:"¿Qué axioma trata sobre quién inició un conflicto?",a:["Puntuación","Digital","No comunicar"],c:0},
+{q:"¿Qué axioma distingue igualdad y jerarquía?",a:["Simétrica y complementaria","Contenido","Digital"],c:0},
+{q:"¿Qué axioma dice que todo mensaje tiene contenido y relación?",a:["Relación y contenido","Puntuación","No comunicar"],c:0}
+];
+let pi=3,ei=5,i=0,attack=true;
+function hearts(n){return "❤️".repeat(n)}
+function render(){
+if(pi<=0){document.body.innerHTML="<h1>💀 Perdiste</h1><button onclick=location.reload()>Jugar otra vez</button>";return;}
+if(ei<=0){document.body.innerHTML="<h1>🏆 ¡Ganaste!</h1><button onclick=location.reload()>Jugar otra vez</button>";return;}
+document.getElementById("ph").textContent=hearts(pi);document.getElementById("eh").textContent=hearts(ei);
+document.getElementById("t").textContent=attack?"Ataque":"Defensa";
+let x=qs[i%qs.length];q.innerHTML="<h2>"+x.q+"</h2>";opts.innerHTML="";
+x.a.forEach((op,k)=>{let b=document.createElement("button");b.textContent=op;b.onclick=()=>ans(k);opts.appendChild(b);});
+msg.textContent="";
+}
+function ans(k){
+let x=qs[i%qs.length],ok=k===x.c;gun.classList.add("shoot");
+setTimeout(()=>{gun.classList.remove("shoot");
+if(attack){
+if(ok){ei--;msg.textContent="💥 ¡Disparo acertado!";}else msg.textContent="🔫 Click... la pistola falló.";
+}else{
+if(ok)msg.textContent="🛡️ ¡La pistola enemiga falló!";
+else{pi--;msg.textContent="💥 El enemigo te disparó.";}
+}
+attack=!attack;i++;render();
+},500);
+}
+render();
+</script></body></html>''')
+path="/mnt/data/Patos_Axiomas_Comunicacion.html"
+with open(path,"w",encoding="utf8") as f:f.write(html)
+print(path)
